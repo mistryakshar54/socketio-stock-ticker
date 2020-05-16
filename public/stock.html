@@ -12,9 +12,25 @@
         body{
             background-color: #e4e9f3;
             display: flex;
-            flex-direction: column;
             justify-content: center;
             align-items: center;
+        }
+        .mainContent{
+            display: flex;
+            justify-content: center;
+        }
+        .addBtn {
+            background-color: #19208e;
+            border: 0px;
+            margin: 1%;
+            color: white;
+            font-weight: bold;
+            border-radius: 0px;
+
+        }
+        .controlButtons{
+            display: flex;
+            flex-direction: column;
         }
         .stockListGroup{
             display: flex;
@@ -26,46 +42,37 @@
         }
         .stockListItem{
             display: flex;
+            padding: 0%;
             border-bottom: 0.5px solid rgba(0,0,0,.125);
+        }
+        .stockName{
+            font-weight: bold;
         }
         .stockNos{
             display: flex;
             justify-content: flex-end;
         }
-
+        .headerLabel{
+            font-size: 1em;
+            font-weight: bold;
+        }
+        .list-group-item:last-of-type{
+            border : 0px;
+        }
     </style>
-    <div class="mainContent">
+    <div class="mainContent col-lg-12">
         <div class="controlButtons">
-            <button onclick="watchStock('INFY')">Add Infy</button>
-            <button onclick="watchStock('HUL')">Add HUL</button>
-            <button onclick="watchStock('TATAPOWER')">Add TATAPOWER</button>
-            <button onclick="unwatchStock('INFY')">Remove Infy</button>
-            <button onclick="unwatchStock('HUL')">Remove HUL</button>
-            <button onclick="unwatchStock('TATAPOWER')">Remove TATAPOWER</button>
-            
+            <label class="headerLabel">Select Stock</label>
+            <button class="btn addBtn" onclick="watchStock('INFY')">INFY</button>
+            <button class="btn addBtn" onclick="watchStock('HUL')">HUL</button>
+            <button class="btn addBtn" onclick="watchStock('SBIN')">SBIN</button>
+            <button class="btn addBtn" onclick="watchStock('TATAPOWER')">TATAPOWER</button>
         </div>
-        <div class="stockTable">
+        <div class="stockTable col-6">
             <div id="stockTable" class="stockItem">
                 <ul class="list-group">
                     <div id="tableContent" class="tableContent">
-                        <!-- <li id="infyListItem" class="list-group-item stockListGroup">
-                          <div class="col-lg-12 stockListItem">
-                              <div class="stockName col-lg-6"><label>INFY</label></div>
-                              <div class="stockNos col-lg-6">
-                                  <label class="col-lg-3">20%</label>
-                                  <label class="col-lg-3">1128</label>
-                              </div>
-                          </div>
-                        </li>
-                        <li id="hulListItem" class="list-group-item stockListGroup">
-                          <div class="col-lg-12 stockListItem">
-                              <div class="stockName col-lg-6"><label>HUL</label></div>
-                              <div class="stockNos col-lg-6">
-                                  <label class="col-lg-3">20%</label>
-                                  <label class="col-lg-3">1128</label>
-                              </div>
-                          </div>
-                        </li> -->
+                        <label></label>
                     </div>
                 </ul>
             </div>
@@ -101,10 +108,11 @@
         let tableElem = document.getElementById('tableContent');
         const htmlContent = `<li id="${stockName}ListItem" class="list-group-item stockListGroup">
             <div class="col-lg-12 stockListItem">
-                <div class="stockName col-lg-6"><label>${stockName}</label></div>
-                <div class="stockNos col-lg-6">
-                    <label class="col-lg-3" id="${stockName}Percent" >0%</label>
-                    <label class="col-lg-3" id="${stockName}Amount">0Rs</label>
+                <div class="stockName col-lg-8"><label>${stockName}</label></div>
+                <div class="stockNos col-lg-4">
+                    <label class="col-lg-4" id="${stockName}Percent" >0%</label>
+                    <label class="col-lg-6" id="${stockName}Amount">0Rs</label>
+                    <label class="col-lg-2" onclick="unwatchStock('${stockName}')">X</label>
                 </div>
             </div>
         </li>`;
