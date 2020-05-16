@@ -1,0 +1,120 @@
+<meta http-equiv="Content-Security-Policy"
+    content="default-src *; style-src 'self' http://* 'unsafe-inline'; script-src 'self' http://* 'unsafe-inline' 'unsafe-eval'" />
+<html>
+    <head>
+        <title>Dummy Stock App</title>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+            integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    </head>
+</html>
+<body>
+    <style>
+        body{
+            background-color: #e4e9f3;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        .stockListGroup{
+            display: flex;
+            color: black;
+            border: 0px;
+        }
+        .stockListGroup > label{
+            padding: 2%;
+        }
+        .stockListItem{
+            display: flex;
+            border-bottom: 0.5px solid rgba(0,0,0,.125);
+        }
+        .stockNos{
+            display: flex;
+            justify-content: flex-end;
+        }
+
+    </style>
+    <div class="mainContent">
+        <div class="controlButtons">
+            <button onclick="watchStock('INFY')">Add Infy</button>
+            <button onclick="watchStock('HUL')">Add HUL</button>
+            <button onclick="watchStock('TATAPOWER')">Add TATAPOWER</button>
+            <button onclick="unwatchStock('INFY')">Remove Infy</button>
+            <button onclick="unwatchStock('HUL')">Remove HUL</button>
+            <button onclick="unwatchStock('TATAPOWER')">Remove TATAPOWER</button>
+            
+        </div>
+        <div class="stockTable">
+            <div id="stockTable" class="stockItem">
+                <ul class="list-group">
+                    <div id="tableContent" class="tableContent">
+                        <!-- <li id="infyListItem" class="list-group-item stockListGroup">
+                          <div class="col-lg-12 stockListItem">
+                              <div class="stockName col-lg-6"><label>INFY</label></div>
+                              <div class="stockNos col-lg-6">
+                                  <label class="col-lg-3">20%</label>
+                                  <label class="col-lg-3">1128</label>
+                              </div>
+                          </div>
+                        </li>
+                        <li id="hulListItem" class="list-group-item stockListGroup">
+                          <div class="col-lg-12 stockListItem">
+                              <div class="stockName col-lg-6"><label>HUL</label></div>
+                              <div class="stockNos col-lg-6">
+                                  <label class="col-lg-3">20%</label>
+                                  <label class="col-lg-3">1128</label>
+                              </div>
+                          </div>
+                        </li> -->
+                    </div>
+                </ul>
+            </div>
+        </div>
+    </div>
+</body>
+<script src="/socket.io/socket.io.js"></script>
+<script>    
+    const socket = io.connect();
+    const socketList = [];
+   
+    watchStock = ( stockName ) =>{
+        const stockSocket = io.connect('/'+stockName);
+        addListItem(stockName);
+        stockSocket.on('stockUpdateMsg', (stockValue) => {
+            console.log(`Stock update for ${stockName}: `, stockValue);
+            document.getElementById(`${stockName}Percent`).innerHTML = `${(stockValue.change_percent).toFixed(2)}%`;
+            document.getElementById(`${stockName}Amount`).innerHTML = `${(stockValue.price).toFixed(2)}Rs`;
+        });
+        socketList.push(stockSocket);
+    }
+    
+    unwatchStock = ( stockName ) => {
+        socketList.forEach((stockSocket, index) => {
+            if(stockSocket.nsp.includes(stockName)){
+                stockSocket.disconnect();
+                document.getElementById(`${stockName}ListItem`).remove();
+            }
+        });
+    }
+
+    addListItem = ( stockName ) => {
+        let tableElem = document.getElementById('tableContent');
+        const htmlContent = `<li id="${stockName}ListItem" class="list-group-item stockListGroup">
+            <div class="col-lg-12 stockListItem">
+                <div class="stockName col-lg-6"><label>${stockName}</label></div>
+                <div class="stockNos col-lg-6">
+                    <label class="col-lg-3" id="${stockName}Percent" >0%</label>
+                    <label class="col-lg-3" id="${stockName}Amount">0Rs</label>
+                </div>
+            </div>
+        </li>`;
+        tableElem.innerHTML += htmlContent;
+    }
+    socket.on('mainSocketMsg', (stocksList) => {
+        console.log(stocksList);
+    });
+    const renderStockTable = ( stockList ) => {
+
+    }
+</script>
+</html>
