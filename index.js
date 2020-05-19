@@ -5,7 +5,6 @@ const app = express();
 console.log("__dirname", __dirname);
 app.use('/', (req, res) => {   res.sendFile(__dirname + "/public/stock.html"); })
 
-
 const appInstance = app.listen(4000);
 const STOCK_REFRESH_INTERVAL = 3000;
 

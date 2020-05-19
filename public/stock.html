@@ -11,13 +11,16 @@
     <style>
         body{
             background-color: #e4e9f3;
+        }
+        .header{
             display: flex;
             justify-content: center;
-            align-items: center;
+            padding: 5%;
         }
         .mainContent{
             display: flex;
             justify-content: center;
+            align-items: center;
         }
         .addBtn {
             background-color: #19208e;
@@ -60,6 +63,9 @@
             border : 0px;
         }
     </style>
+    <div class="col-lg-12 header">
+        <h1>Sample Stock App</h1>
+    </div>
     <div class="mainContent col-lg-12">
         <div class="controlButtons">
             <label class="headerLabel">Select Stock</label>
@@ -83,6 +89,9 @@
 <script>    
     const socket = io.connect();
     const socketList = [];
+    socket.on('mainSocketMsg', (stocksList) => {
+        console.log(stocksList);
+    });
    
     watchStock = ( stockName ) =>{
         const stockSocket = io.connect('/'+stockName);
@@ -117,12 +126,6 @@
             </div>
         </li>`;
         tableElem.innerHTML += htmlContent;
-    }
-    socket.on('mainSocketMsg', (stocksList) => {
-        console.log(stocksList);
-    });
-    const renderStockTable = ( stockList ) => {
-
     }
 </script>
 </html>
